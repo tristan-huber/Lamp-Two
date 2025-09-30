@@ -1,0 +1,15 @@
+{
+    "atomType": "Molecule",
+    "name": "Lamp Two",
+    "x": 0,
+    "y": 0,
+    "uniqueID": "6e738bd6-6ca5-4b54-9b07-218ccac0ee96",
+    "ioValues": [],
+    "topLevel": true,
+    "allAtoms": [],
+    "allConnectors": [],
+    "unitsKey": "MM",
+    "fileTypeVersion": 1,
+    "compiledBom": {},
+    "filetypeVersion": 1
+}
