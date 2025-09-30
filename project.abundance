@@ -23,18 +23,48 @@
             "uniqueID": "8fc14e2b-d3bb-4f02-ae1b-86e135adf95b",
             "ioValues": [
                 {
-                    "name": "dist",
+                    "name": "x1",
                     "ioValue": 5,
-                    "currentEquation": null
+                    "currentEquation": "5"
                 },
                 {
-                    "name": "height",
+                    "name": "y1",
                     "ioValue": 10,
-                    "currentEquation": null
+                    "currentEquation": "10"
+                },
+                {
+                    "name": "x2",
+                    "ioValue": 10,
+                    "currentEquation": "10"
+                },
+                {
+                    "name": "y2",
+                    "ioValue": 0,
+                    "currentEquation": "0"
+                },
+                {
+                    "name": "x3",
+                    "ioValue": 15,
+                    "currentEquation": "15"
+                },
+                {
+                    "name": "y3",
+                    "ioValue": -5,
+                    "currentEquation": "-5"
+                },
+                {
+                    "name": "x4",
+                    "ioValue": 20,
+                    "currentEquation": "20"
+                },
+                {
+                    "name": "y4",
+                    "ioValue": 0,
+                    "currentEquation": "0"
                 }
             ],
             "codeVersion": 1,
-            "code": "\n      const Inputs = [\n       {inputName: \"shape\", type: \"geometry\", defaultValue: null},\n      {inputName: \"dist\", type: \"number\", defaultValue: 5},\n        {inputName: \"height\", type: \"number\", defaultValue: 10}\n      ]\n      //This defines the molecules inputs and creates variables with the same names which can be referenced in the code\n\n      //Gets the shape from the library - no need to clone or access geometry directly\n      let importedShape = library[shape]\n\n      //Use the built-in Move function to move the shape in the X direction\n      let movedShape = await Move(importedShape, dist, 0, 0)\n\n      //Use the built-in Rotate function to rotate the shape\n      let rotatedShape = await Rotate(importedShape, 0, 45, 0)\n\n      //Use the built-in Scale function to make the shape smaller\n      let scaledShape = await Scale(importedShape, 0.8)\n\n      //Console.log works for debugging to better see what is happening under the hood\n      console.log(\"Original shape bounds:\", GetBounds(importedShape))\n      console.log(\"Moved shape bounds:\", GetBounds(movedShape))\n\n      //Create a new shape from scratch using replicad\n      let createdRectangle = replicad.drawRectangle(5, 7)\n      const newPlane = new replicad.Plane().pivot(0, 'Y')\n      let createdShape = createdRectangle.sketchOnPlane(newPlane).extrude(height)\n\n      //Wrap the raw replicad geometry in our assembly format\n      let shape2 = {\n          geometry: [createdShape],\n          dimension: \"3D\",\n          tags: [\"createdShape\"],\n          color: '#A3CE5B',\n          plane: newPlane,\n          bom: []\n      }\n\n      //Use the built-in Fillet function to round the edges\n      let filletedShape = await Fillet(shape2, 0.5)\n\n      //Use the built-in Chamfer function to bevel the edges  \n      let chamferedShape = await Chamfer(movedShape, 0.3)\n\n      //Use the built-in Assembly function to combine multiple shapes\n      let finalAssembly = await Assembly([rotatedShape, scaledShape, filletedShape, chamferedShape])\n\n      //You can also create boolean operations using Intersect\n      //let intersection = await Intersect(movedShape, rotatedShape)\n\n      return finalAssembly\n\n      /**\n      Built-in Functions Available:\n      - Move(geometry, x, y, z) - Move a shape in 3D space\n      - Rotate(geometry, x, y, z) - Rotate a shape around X, Y, Z axes (degrees)\n      - Scale(geometry, factor) - Scale a shape by a factor\n      - Assembly([shapes]) - Combine multiple shapes into an assembly\n      - Intersect(shape1, shape2) - Boolean intersection of two shapes\n      - GetBounds(geometry) - Get the bounding box of a shape\n      - Fillet(geometry, radius) - Round edges with specified radius\n      - Chamfer(geometry, size) - Bevel edges with specified size\n\n      To Use the Code Atom, enter your inputs to the input list as an object array:\n      const Inputs = [\n        {inputName: \"shape\", type: \"geometry\", defaultValue: null},\n        {inputName: \"dist\", type: \"number\", defaultValue: 5},\n        {inputName: \"height\", type: \"number\", defaultValue: 10}\n      ]\n\n      Access imported geometry using library[inputName] - the built-in functions handle \n      the complexity of accessing geometry arrays and maintaining metadata automatically.\n\n      Simple Example - Move a shape:\n         const Inputs = [\n          {inputName: \"shape\", type: \"geometry\", defaultValue: null},\n          {inputName: \"x\", type: \"number\", defaultValue: 5}\n        ]\n        let movedShape = await Move(library[shape], x, 0, 0)\n        return movedShape\n      */\n      "
+            "code": "\n      const Inputs = [\n        {inputName: \"x1\", type: \"number\", defaultValue: 5},\n        {inputName: \"y1\", type: \"number\", defaultValue: 10},\n        {inputName: \"x2\", type: \"number\", defaultValue: 5},\n        {inputName: \"y2\", type: \"number\", defaultValue: 10},\n        {inputName: \"x3\", type: \"number\", defaultValue: 5},\n        {inputName: \"y3\", type: \"number\", defaultValue: 10},\n        {inputName: \"x4\", type: \"number\", defaultValue: 5},\n        {inputName: \"y4\", type: \"number\", defaultValue: 10},\n      ]\n      //This defines the molecules inputs and creates variables with the same names which can be referenced in the code\n      const points = [[x1, y1], [x2, y2], [x3, y3], [x4, y4]]\n  \n      const spl = replicad.draw();\n      points.forEach((p) => {\n        spl.smoothSplineTo(p)\n      })\n\n      return {geometry: [spl.close().sketchOnPlane(\"XY\")]}\n\n      "
         }
     ],
     "allConnectors": [],
